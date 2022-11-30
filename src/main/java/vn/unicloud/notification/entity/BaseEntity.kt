@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 abstract class BaseEntity(
     @CreatedBy
-    open var createdBy: String? = null,
+    var createdBy: String? = null,
     @LastModifiedBy
     var updatedBy: String? = null,
     @CreatedDate

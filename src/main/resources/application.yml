@@ -7,9 +7,9 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    from_email: ${FROM_MAIL:noreply.unicloudpaybox@gmail.com}
-    username: ${MAIL_USERNAME:noreply.unicloudpaybox@gmail.com}
-    password: ${MAIL_PASSWORD:zrewcovlobtkumac}
+    from_email: ${FROM_MAIL:longtpt@unicloud.com.vn}
+    username: ${MAIL_USERNAME:longtpt@unicloud.com.vn}
+    password: ${MAIL_PASSWORD:Ld201199-}
     properties.mail.smtp:
       auth: true
       starttls.enable: true

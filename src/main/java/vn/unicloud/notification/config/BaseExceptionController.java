@@ -26,7 +26,7 @@ public class BaseExceptionController {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<?> handleException(Exception e) {
-        log.error("", e);
+        e.printStackTrace();
         return HttpResponse
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseData<>(1, e.getMessage()));

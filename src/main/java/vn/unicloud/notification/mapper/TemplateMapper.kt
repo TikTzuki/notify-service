@@ -1,16 +1,13 @@
 package vn.unicloud.notification.mapper
 
 import vn.unicloud.notification.dtos.TemplateDto
+import vn.unicloud.notification.dtos.TemplateRequestPartDto
 import vn.unicloud.notification.entity.Template
-
-class TemplateMapper {
-}
 
 fun Template.toTemplateDto() = TemplateDto(
     id = id!!,
     title = title,
     description = description,
-    sourceType = sourceType,
     content = content,
     type = type,
     createdAt = createdAt!!,
@@ -22,7 +19,13 @@ fun Template.toTemplateDto() = TemplateDto(
 fun TemplateDto.toTemplate() = Template(
     title = title,
     description = description,
-    sourceType = sourceType,
     content = content,
     type = type
+)
+
+fun TemplateRequestPartDto.toTemplate() = Template(
+    title = title,
+    description = description,
+    type = type,
+    content = ""
 )
