@@ -10,6 +10,7 @@ fun Template.toTemplateDto() = TemplateDto(
     description = description,
     content = content,
     type = type,
+    context = context,
     createdAt = createdAt!!,
     updatedAt = updatedAt!!,
     createdBy = createdBy,
@@ -27,5 +28,6 @@ fun TemplateRequestPartDto.toTemplate() = Template(
     title = title,
     description = description,
     type = type,
-    content = ""
+    content = "",
+    context = context
 )

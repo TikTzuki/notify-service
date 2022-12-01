@@ -3,6 +3,13 @@ package vn.unicloud.notification.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.thymeleaf.context.Context
+import vn.unicloud.notification.entity.EntityTrigger
+import vn.unicloud.notification.entity.Template
+import vn.unicloud.notification.generated.v1.model.MailNotification.SendEmailEvent
+import vn.unicloud.notification.repository.EntityTriggerRepository
+import vn.unicloud.notification.repository.NotificationRepository
+import vn.unicloud.notification.repository.TemplateRepository
 import java.util.*
 import javax.mail.*
 import javax.mail.internet.InternetAddress
@@ -11,7 +18,10 @@ import javax.mail.internet.MimeMessage
 
 @Service
 class MailService @Autowired constructor(
-    var thymeleafService: ThymeleafService
+    val thymeleafService: ThymeleafService,
+    val triggerRepository: EntityTriggerRepository,
+    val notificationRepository: NotificationRepository,
+    val templateRepository: TemplateRepository
 ) {
     private val CONTENT_TYPE_TEXT_HTML = "text/html;charset=\"utf-8\""
 
@@ -27,6 +37,28 @@ class MailService @Autowired constructor(
     @Value("\${spring.mail.password}")
     private val password: String? = null
 
+    fun sendMail(sendMailEvent: SendEmailEvent) {
+        val triggerOpt = triggerRepository.findById(sendMailEvent.triggerId);
+        triggerOpt.ifPresentOrElse({
+            val template = templateRepository.findById(it.templateId).get()
+            val context = Context()
+            context.setVariables(sendMailEvent.templateContextMap as Map<String, Any>?)
+            val emailContent = ThymeleafService.templateEngine.process(template.content, context)
+            bulkSendMail(it, template, emailContent)
+        }, {
+            System.out.println("trigger not found")
+        })
+
+    }
+
+    fun bulkSendMail(trigger: EntityTrigger, template: Template, content: String) {
+        println("bulk send mail")
+        println(trigger.emails)
+        trigger.emails = listOf("tranphanthanhlong18@gmail.com")
+        trigger.emails.chunked(10).forEach {
+            sendMail(template.title, content, it)
+        }
+    }
 
     fun sendMail(subject: String, content: String, recipients: Iterable<String>) {
         val props = Properties()
@@ -44,6 +76,7 @@ class MailService @Autowired constructor(
         )
 
         val message: Message = MimeMessage(session)
+        println("before send")
         try {
             message.setRecipients(Message.RecipientType.TO, recipients.map { InternetAddress(it) }.toTypedArray())
             message.setFrom(InternetAddress(email))

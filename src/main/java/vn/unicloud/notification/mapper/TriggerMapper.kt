@@ -7,7 +7,11 @@ fun TriggerDto.toEntityTrigger() = EntityTrigger(
     sourceType = sourceType,
     topic = topic,
     path = path,
-    templateId = templateId
+    templateId = templateId,
+    sourceEmail = sourceEmail,
+    sourceEmailType = sourceEmailType,
+    sourceEmailCredentials = sourceEmailCredentials,
+    emails = emails,
 )
 
 fun EntityTrigger.toTriggerDto() = TriggerDto(

@@ -9,6 +9,7 @@ class TemplateDto(
     var description: String,
     var type: TemplateType,
     var content: String,
+    var context: Map<String, String>,
     var createdAt: LocalDateTime?,
     var updatedAt: LocalDateTime?,
     var createdBy: String?,
@@ -19,4 +20,5 @@ class TemplateRequestPartDto(
     var title: String,
     var description: String,
     var type: TemplateType,
+    var context: Map<String, String>
 )

@@ -8,7 +8,7 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 @Service
 public class ThymeleafService {
-    private static final TemplateEngine templateEngine;
+    public static final TemplateEngine templateEngine;
 
     static {
         templateEngine = emailTemplateEngine();

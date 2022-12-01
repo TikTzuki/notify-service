@@ -2,7 +2,6 @@ package vn.unicloud.notification.entity
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import vn.unicloud.notification.enums.SourceEventType
 import vn.unicloud.notification.enums.TemplateType
 
 @Document("template")
@@ -13,5 +12,6 @@ class Template(
     var description: String,
     var type: TemplateType,
     var content: String,
+    var context: Map<String, String> = mutableMapOf()
 ) : BaseEntity() {
 }
