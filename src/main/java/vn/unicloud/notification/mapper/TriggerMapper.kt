@@ -6,7 +6,7 @@ import vn.unicloud.notification.entity.EntityTrigger
 fun TriggerDto.toEntityTrigger() = EntityTrigger(
     sourceType = sourceType,
     topic = topic,
-    path = url,
+    path = path,
     templateId = templateId
 )
 
@@ -14,7 +14,7 @@ fun EntityTrigger.toTriggerDto() = TriggerDto(
     id = id,
     sourceType = sourceType,
     topic = topic,
-    url = path,
+    path = path,
     createdBy = createdBy,
     updatedBy = updatedBy,
     createdAt = createdAt,

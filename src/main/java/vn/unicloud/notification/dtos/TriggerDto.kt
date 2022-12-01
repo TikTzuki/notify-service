@@ -7,7 +7,7 @@ class TriggerDto(
     var id: String?=null,
     var sourceType: SourceEventType,
     var topic: String,
-    var url: String,
+    var path: String,
     var templateId: String,
     var createdBy: String?,
     var updatedBy: String?,

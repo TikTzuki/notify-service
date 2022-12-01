@@ -11,11 +11,13 @@ import vn.unicloud.notification.exception.InternalException
 import vn.unicloud.notification.mapper.toEntityTrigger
 import vn.unicloud.notification.mapper.toTriggerDto
 import vn.unicloud.notification.repository.EntityTriggerRepository
+import vn.unicloud.notification.repository.TemplateRepository
 import vn.unicloud.notification.service.interfaces.IEntityTriggerService
 
 @Service
 class EntityTriggerService @Autowired constructor(
-    val entityTriggerRepository: EntityTriggerRepository
+    val entityTriggerRepository: EntityTriggerRepository,
+    val templateRepository: TemplateRepository
 ) : IEntityTriggerService {
     override fun getTriggers(pageable: Pageable): Page<TriggerDto> {
         return entityTriggerRepository.findAll(pageable).map(EntityTrigger::toTriggerDto)
@@ -28,6 +30,13 @@ class EntityTriggerService @Autowired constructor(
     }
 
     override fun createTrigger(triggerDto: TriggerDto): TriggerDto {
+        if (!templateRepository.existsById(triggerDto.templateId)) {
+            throw InternalException(ResponseCode.TEMPLATE_NOT_FOUND)
+        }
+        if (triggerDto.path.split("/").size < 2) {
+            throw InternalException(ResponseCode.INVALID_PATH_FORMAT)
+        }
+
         val entityTrigger = triggerDto.toEntityTrigger();
         return entityTriggerRepository.save(entityTrigger).toTriggerDto()
     }

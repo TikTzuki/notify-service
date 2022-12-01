@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "vn.unicloud.notification.generated.v1.model";
+
+//import "google/protobuf/timestamp.proto";
+//import "comment.proto";
+//import "author.proto";
+
+message SendEmailEvent {
+  string triggerId = 1;
+}

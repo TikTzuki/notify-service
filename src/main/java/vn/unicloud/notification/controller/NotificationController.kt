@@ -1,9 +1,8 @@
 package vn.unicloud.notification.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import vn.unicloud.notification.dtos.NotifyRequest
 import vn.unicloud.notification.service.NotificationService
 
 @RestController
@@ -12,7 +11,11 @@ class NotificationController @Autowired constructor(
     val notificationService: NotificationService
 ) {
     @PostMapping("/{entity}/{event}")
-    fun invokeNotify(entity: String, event: String) {
-        notificationService.invokeNotify(entity, event)
+    fun invokeNotify(
+        @PathVariable entity: String,
+        @PathVariable event: String,
+        @RequestBody notifyRequest: NotifyRequest
+    ) {
+        notificationService.invokeNotify(entity, event, notifyRequest)
     }
 }

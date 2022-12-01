@@ -19,9 +19,26 @@ spring:
       date-time: iso
       date: iso
       time: iso
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:127.0.0.1:9092}
+    properties:
+      schema.registry.url: ${KAFKA_SCHEMA_REGISTRY_URL:http://127.0.0.1:8081}
+    consumer:
+      group-id: notificationService
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer
+      #      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.protobuf.KafkaProtobufSerializer
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.apache.kafka: INFO
+    org.apache.kafka.common.metrics: INFO
+    org.apache.kafka.clients.consumer.internals: INFO
+    org.apache.kafka.clients.consumer.internals.Fetcher: INFO
 springdoc:
   swagger-ui:
     path: /

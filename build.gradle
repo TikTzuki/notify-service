@@ -1,10 +1,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.jetbrains.kotlin.jvm' version '1.6.21'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.6.21'
+    id "com.google.protobuf" version "0.8.18"
 }
 
 group = 'vn.unicloud'
@@ -19,6 +29,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven"
+    }
 }
 
 dependencies {
@@ -42,7 +55,11 @@ dependencies {
     /**
      * Message queue
      */
+    implementation 'org.apache.kafka:kafka-clients'
     implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: kafkaVersion
+    implementation 'com.google.protobuf:protobuf-java:3.11.4'
+    implementation 'io.confluent:kafka-protobuf-serializer:5.5.1'
+
     /**
      * Open API
      */
@@ -68,4 +85,12 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+protobuf {
+    // Configure the protoc executable
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.12.4'
+        generatedFilesBaseDir = "$projectDir/src"
+    }
 }

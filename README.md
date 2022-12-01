@@ -1,0 +1,1 @@
+Mail limitation: https://support.google.com/a/answer/166852?hl=en
