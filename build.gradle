@@ -5,6 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath "com.github.node-gradle:gradle-node-plugin:3.5.0"
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
     }
 }
@@ -15,7 +16,9 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.21'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.6.21'
     id "com.google.protobuf" version "0.8.18"
+    id "com.github.node-gradle.node" version "3.5.0"
 }
+apply plugin: "com.github.node-gradle.node"
 
 group = 'vn.unicloud'
 version = '0.0.1-SNAPSHOT'
@@ -33,6 +36,64 @@ repositories {
         url "https://packages.confluent.io/maven"
     }
 }
+
+node {
+    // Version of node to use.
+    version = '16.18.1'
+
+    // Base URL for fetching node distributions (change if you have a mirror).
+//    distBaseUrl = 'https://nodejs.org/dist'
+
+    // If true, it will download node using above parameters.
+    // If false, it will try to use globally installed node.
+    download = true
+
+    // Set the work directory for unpacking node
+    workDir = file("${project.projectDir}/notify-ui/nodejs")
+
+    // Set the work directory for NPM
+    npmWorkDir = file("${project.projectDir}/notify-ui/npm")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}/notify-ui")
+}
+task npmInstallDependencies(type: NpmTask) {
+    dependsOn 'npmSetup'
+    execOverrides {
+        it.ignoreExitValue = true
+        it.workingDir = 'notify-ui'
+    }
+    args = ['install']
+}
+
+task npmBuild(type: NpmTask) {
+    dependsOn 'npmInstallDependencies'
+    execOverrides {
+//        it.ignoreExitValue = true
+        it.workingDir = 'notify-ui'
+    }
+    args = ['run', 'build']
+}
+
+task copyFrontendToBuild(type: Copy) {
+    dependsOn 'npmBuild'
+    from "$projectDir/notify-ui/build/"
+    into "$buildDir/resources/main/static"
+}
+
+processResources {
+    dependsOn 'copyFrontendToBuild'
+    dependsOn 'generateProto'
+}
+
+task npmShowVersion(type: NpmTask) {
+    execOverrides {
+        it.ignoreExitValue = true
+        it.workingDir = 'notify-ui'
+    }
+    args = ['--version']
+}
+
 
 dependencies {
     def springVersion = '2.7.6'
@@ -85,6 +146,12 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.compileTestJava {
+    onlyIf {
+        Boolean.getBoolean('test')
+    }
 }
 
 protobuf {

@@ -17,7 +17,7 @@ import vn.unicloud.notification.dtos.TemplateRequestPartDto
 import vn.unicloud.notification.service.interfaces.ITemplateService
 
 @RestController
-@RequestMapping("/templates")
+@RequestMapping("/api/templates")
 class TemplateController @Autowired constructor(
     val templateService: ITemplateService
 ) {
